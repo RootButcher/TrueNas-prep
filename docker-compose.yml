@@ -1,0 +1,7 @@
+services:
+  tests:
+    build: .
+    image: truenas-prep:latest
+    environment:
+      - TRUENAS_HOST
+      - TRUENAS_API_KEY

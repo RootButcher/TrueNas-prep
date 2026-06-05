@@ -1,10 +1,13 @@
 import pytest
 from practice.api_truenas import Client
-from creds import *
-1
+from creds import load_secrets, MissingSecretError
+
 @pytest.fixture(scope="session")
 def client():
-    secrets = load_secrets()
+    try:
+        secrets = load_secrets()
+    except MissingSecretError as e:
+        pytest.skip(f"live API tests skipped: {e}")
     return Client(secrets["truenas_host"], secrets["truenas_api_key"])
 
 @pytest.fixture(scope="session")

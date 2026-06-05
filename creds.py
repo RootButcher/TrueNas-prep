@@ -8,12 +8,20 @@ ENV_MAP = {
     "truenas_api_key": "TRUENAS_API_KEY",
 }
 
+class MissingSecretError(RuntimeError):
+    pass
+
 def load_secrets():
     out = {}
     for key, env_var in ENV_MAP.items():
         val = os.environ.get(env_var)
         if val is None:
-            from sopsy import Sops
+            try:
+                from sopsy import Sops
+            except ImportError:
+                raise MissingSecretError(
+                    f"env var {env_var} is not set and sopsy is unavailable"
+                )
             val = Sops(SECRETS_FILE).get(key)
         out[key] = val
     return out
