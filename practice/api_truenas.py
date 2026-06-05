@@ -9,15 +9,15 @@ class Client:
     def __init__(self, host: str, api_key: str,ssl:bool = True, verify_ssl: bool = True):
         self.host = host
         self.ssl = ssl
-        self.verify_ssl = verify_ssl
-        self._headers = {"Authorization": f"Bearer {api_key}"}
-
+        self._session = requests.Session()
+        self._session.headers["Authorization"] = f"Bearer {api_key}"
+        self._session.verify = verify_ssl
 
     def _make_request(self, method: str, path: str, params: dict = None, data: dict = None)->dict:
         scheme = "https" if self.ssl else "http"
         url = f"{scheme}://{self.host}{self._endpoint}{path}"
         try:
-            response = requests.request(method, url, headers=self._headers, params=params, json=data, verify=self.verify_ssl)
+            response = self._session.request(method, url, params=params, json=data)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as e:
