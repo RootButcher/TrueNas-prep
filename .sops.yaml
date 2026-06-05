@@ -1,0 +1,4 @@
+# pub_key
+creation_rules:
+  - path_regex: \.sops\.yaml$
+    age: age1nnmg6lemam8f87cfnhm3ffduptpjmjudq9cm064qtrkdl2jhq40qjpkaue
